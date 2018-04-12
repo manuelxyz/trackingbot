@@ -1,0 +1,20 @@
+@startuml
+
+title Trackingbot Architecure
+
+package bot{
+    interface MessageBot
+    class TelegramBot
+    
+    package commands{
+        interface MessageCommand
+        class TrackingStateCommand
+        class IngredientsCommand
+    }
+}
+
+TelegramBot --|> MessageBot
+TrackingStateCommand --|> MessageCommand
+IngredientsCommand --|> MessageCommand
+
+@enduml
