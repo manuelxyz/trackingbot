@@ -3,18 +3,53 @@
 title Trackingbot Architecure
 
 package bot{
-    interface MessageBot
+    interface MessageBot{
+        + apply(&mut self,cmds : Vec<MessageCommand>)
+        + start(&mut self) : Result<(),Error>
+    }
     class TelegramBot
     
+    class BotBuilder{
+        + new() : BotBuilder
+        + build(&self,config : AppConfig, type : BotType) : 
+Result<Box<MessageBot>,Error>
+    }
+    
+    enum BotType{
+        + TELEGRAM
+    }
+    
     package commands{
-        interface MessageCommand
+        interface MessageCommand{
+            + exec_cmd(&self,args: Vec<&str>) : Result<String,Error>
+            + exec_cmd_mut(&mut self, args: Vec<&str>) : 
+Result<String,Error>
+        }
         class TrackingStateCommand
         class IngredientsCommand
     }
 }
 
+package config{
+    class AppConfig
+    class DatabaseConfig
+    class ConfigLoader{
+        + load() : Result<AppConfig,Error>
+    }
+}
+
+BotBuilder --> BotType
+BotBuilder --> AppConfig
+BotBuilder --> MessageBot
+
 TelegramBot --|> MessageBot
 TrackingStateCommand --|> MessageCommand
 IngredientsCommand --|> MessageCommand
+MessageBot --> MessageCommand
+
+AppConfig --> DatabaseConfig
+ConfigLoader --> AppConfig
+
+
 
 @enduml
